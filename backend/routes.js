@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const db = require('./db');
 
-router.get('/query', async (req, res) => {
+router.get('/requestChart', async (req, res) => {
     try {
-        const result = await db.query('SELECT * FROM "order" LIMIT 10');
-        res.json(result.rows);
+        const limit = 15;
+        const monthlyRequestCounts = await db.getMonthlyRequestCounts(limit);
+        res.json(monthlyRequestCounts);
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server Error');
+        res.status(500).send('Server Error: failed to fetch monthly request counts');
     }
 });
 
