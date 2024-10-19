@@ -1,8 +1,8 @@
-import type { InferGetStaticPropsType, GetStaticProps } from "next";
+import React from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
-type MonthlyRequestsCount = {
+export type MonthlyRequestsCount = {
   month_year: string,
   request_count: number;
 }
@@ -14,17 +14,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export const getStaticProps = ( async (context) => {
-  const res = await fetch('http://localhost:5001/api/requestChart');
-  const chartData = await res.json();
-  return { props: { chartData } }
-}) satisfies GetStaticProps<{
-  chartData: MonthlyRequestsCount[]
-}>
+type RequestChartProps = {
+  chartData: MonthlyRequestsCount[],
+}
 
-export default function RequestChart({
-  chartData,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+export const RequestChart: React.FC<RequestChartProps> = ({ chartData }) => {
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
       <BarChart accessibilityLayer data={chartData}>
@@ -40,4 +34,6 @@ export default function RequestChart({
       </BarChart>
     </ChartContainer>
   );
-}
+};
+
+export default RequestChart;

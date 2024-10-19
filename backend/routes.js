@@ -4,7 +4,7 @@ const db = require('./db');
 
 router.get('/requestChart', async (req, res) => {
     try {
-        const limit = 15;
+        const limit = 12;
         const monthlyRequestCounts = await db.getMonthlyRequestCounts(limit);
         res.json(monthlyRequestCounts);
     } catch (err) {
