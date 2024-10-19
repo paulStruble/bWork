@@ -1,5 +1,8 @@
-const { Pool } = require('pg');
+const { Pool, types } = require('pg');
 require('dotenv').config();
+
+// parse integers as number (rather than string) for json formatting
+types.setTypeParser(23, (val) => parseInt(val, 10));
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -9,12 +12,11 @@ const pool = new Pool({
     port: process.env.DB_PORT
 });
 
-
 const getMonthlyRequestCounts = async (limit) => {
     const query = `
     SELECT 
         TO_CHAR(accept_date, 'Month YYYY') AS month_year, 
-        COUNT(*) AS request_count
+        CAST(COUNT(*) AS INT) AS request_count
     FROM 
         request
     WHERE 
