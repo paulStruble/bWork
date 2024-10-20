@@ -13,4 +13,26 @@ router.get('/requestChart', async (req, res) => {
     }
 });
 
+router.get('/dailyRequestCounts', async (req, res) => {
+    try {
+        const limit = 30;
+        const dailyRequestCounts = await db.getDailyRequestCounts(limit);
+        res.json(dailyRequestCounts);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error: failed to fetch daily request counts');
+    }
+});
+
+router.get('/dailyItemCounts', async (req, res) => {
+    try {
+        const limit = 29;
+        const dailyItemCounts = await db.getDailyItemCounts(limit);
+        res.json(dailyItemCounts);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error: failed to fetch daily item counts');
+    }
+});
+
 module.exports = router;
