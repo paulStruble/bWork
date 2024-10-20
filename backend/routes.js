@@ -35,4 +35,16 @@ router.get('/dailyItemCounts', async (req, res) => {
     }
 });
 
+router.get('/hotBuildingCounts', async (req, res) => {
+    try {
+        const limit = 10;
+        const days = 90
+        const hotBuildingCounts = await db.getHotBuildingCounts(limit, days);
+        res.json(hotBuildingCounts);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error: failed to fetch hot building counts');
+    }
+});
+
 module.exports = router;
