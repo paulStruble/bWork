@@ -58,4 +58,26 @@ router.get('/buildingRequestCounts', async (req, res) => {
     }
 });
 
+router.get('/recentRequestCount', async (req, res) => {
+    try {
+        const days = 90;
+        const recentRequestCount = await db.getRecentRequestCount(days);
+        res.json(recentRequestCount);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error: failed to fetch recent request count');
+    }
+});
+
+router.get('/recentOrderCount', async (req, res) => {
+    try {
+        const days = 90;
+        const recentOrderCount = await db.getRecentOrderCount(days);
+        res.json(recentOrderCount);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error: failed to fetch recent order count');
+    }
+});
+
 module.exports = router;
