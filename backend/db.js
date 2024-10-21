@@ -157,7 +157,7 @@ const getHotBuildingCounts = async (limit, days) => {
         building_dates
     WHERE
         request_date <= CURRENT_DATE
-        AND request_date >= CURRENT_DATE - INTERVAL '${days} days'
+        AND request_date >= CURRENT_DATE - INTERVAL '${days - 1} days'
     GROUP BY
         building
     ORDER BY count DESC
@@ -178,7 +178,7 @@ const getBuildingRequestCounts = async (days) => {
         building NOTNULL 
         AND accept_date NOTNULL
         AND accept_date <= CURRENT_DATE
-        AND accept_date >= CURRENT_DATE - INTERVAL '${days} days'
+        AND accept_date >= CURRENT_DATE - INTERVAL '${days - 1} days'
     GROUP BY 
         building
     ORDER BY
