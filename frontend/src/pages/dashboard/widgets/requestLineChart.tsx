@@ -47,9 +47,9 @@ type RequestLineChartProps = {
 const RequestLineChart: React.FC<RequestLineChartProps> = ({ chartData }) => {
   return (
     <Card>
-      <CardHeader className="flex justify-center">
+      {/* <CardHeader className="flex justify-center">
         <CardTitle className="text-center">Daily Counts</CardTitle>
-      </CardHeader>
+      </CardHeader> */}
       <CardContent className="w-full">
         <ChartContainer config={chartConfig} className="w-full h-64">
           <LineChart
@@ -86,7 +86,7 @@ const RequestLineChart: React.FC<RequestLineChartProps> = ({ chartData }) => {
               strokeWidth={2}
               dot={false}
             />
-            <ChartLegend content={<ChartLegendContent />} />
+            {/* <ChartLegend content={<ChartLegendContent />} /> */}
           </LineChart>
         </ChartContainer>
       </CardContent>
