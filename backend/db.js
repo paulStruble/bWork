@@ -91,7 +91,7 @@ const getHotBuildingCounts = async (limit, days) => {
             request_date NOTNULL 
     )
     SELECT
-        COUNT(*) AS count,
+        COUNT(*)::INT AS count,
         building,
         AVG(priority) AS average_priority
     FROM
@@ -108,9 +108,31 @@ const getHotBuildingCounts = async (limit, days) => {
     return result.rows;
 }
 
+const getBuildingRequestCounts = async (days) => {
+    const query = `
+    SELECT
+        building,
+        CAST(COUNT(*) AS INT) AS count
+    FROM 
+        request
+    WHERE
+        building NOTNULL 
+        AND accept_date NOTNULL
+        AND accept_date <= CURRENT_DATE
+        AND accept_date >= CURRENT_DATE - INTERVAL '${days} days'
+    GROUP BY 
+        building
+    ORDER BY
+        building`;
+
+    const result = await pool.query(query);
+    return result.rows;
+}
+
 module.exports = {
     getMonthlyRequestCounts,
     getDailyRequestCounts,
     getDailyItemCounts,
     getHotBuildingCounts,
+    getBuildingRequestCounts,
 };

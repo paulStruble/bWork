@@ -26,7 +26,7 @@ router.get('/dailyRequestCounts', async (req, res) => {
 
 router.get('/dailyItemCounts', async (req, res) => {
     try {
-        const limit = 29;
+        const limit = 90;
         const dailyItemCounts = await db.getDailyItemCounts(limit);
         res.json(dailyItemCounts);
     } catch (err) {
@@ -44,6 +44,17 @@ router.get('/hotBuildingCounts', async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error: failed to fetch hot building counts');
+    }
+});
+
+router.get('/buildingRequestCounts', async (req, res) => {
+    try {
+        const days = 90;
+        const buildingRequestCounts = await db.getBuildingRequestCounts(days);
+        res.json(buildingRequestCounts);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error: failed to fetch building request counts');
     }
 });
 
