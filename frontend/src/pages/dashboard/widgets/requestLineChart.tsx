@@ -18,7 +18,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 
-function formatDate(dateStr) {
+function formatDate(dateStr: string) {
     const [year, month, day] = dateStr.split('-');
     return `${parseInt(month)}/${parseInt(day)}`;
 }
@@ -90,11 +90,6 @@ const RequestLineChart: React.FC<RequestLineChartProps> = ({ chartData }) => {
           </LineChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex justify-center items-center flex-col gap-2 text-xs">
-        <div className="leading-none text-muted-foreground italic text-center">
-          Note: Work order counts can trail by a few days
-        </div>
-      </CardFooter>
     </Card>
   );
 };

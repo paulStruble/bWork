@@ -26,8 +26,8 @@ router.get('/dailyRequestCounts', async (req, res) => {
 
 router.get('/dailyItemCounts', async (req, res) => {
     try {
-        const limit = 90;
-        const dailyItemCounts = await db.getDailyItemCounts(limit);
+        const days = 90;
+        const dailyItemCounts = await db.getDailyItemCounts(days);
         res.json(dailyItemCounts);
     } catch (err) {
         console.error(err.message);

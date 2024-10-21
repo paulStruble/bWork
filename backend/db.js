@@ -54,27 +54,86 @@ const getDailyRequestCounts = async (limit) => {
     return result.rows;
 }
 
-const getDailyItemCounts = async (limit) => {
-    const query = `
-        WITH daily_request_counts AS (
-            SELECT accept_date::DATE AS date, COUNT(*) AS request_count
-            FROM request
-            WHERE accept_date NOTNULL
-            GROUP BY date 
-            ORDER BY date DESC 
-            LIMIT $1
-        ), daily_order_counts AS (
-            SELECT TO_DATE(request_date, 'MM-DD-YYYY') AS date, COUNT(*) AS order_count
-            FROM "order"
-            WHERE request_date NOTNULL
-            GROUP BY date
-        )
-            SELECT TO_CHAR(r.date, 'YYYY-MM-DD') AS date, CAST(request_count AS INT), CAST(order_count AS INT)
-            FROM daily_request_counts r LEFT JOIN daily_order_counts o
-            ON r.date = o.date
-            ORDER BY r.date`
+// const getDailyItemCounts = async (limit) => {
+//     const query = `
+//         WITH daily_request_counts AS (
+//             SELECT accept_date::DATE AS date, COUNT(*) AS request_count
+//             FROM request
+//             WHERE accept_date NOTNULL
+//             GROUP BY date 
+//             ORDER BY date DESC 
+//             LIMIT $1
+//         ), daily_order_counts AS (
+//             SELECT TO_DATE(request_date, 'MM-DD-YYYY') AS date, COUNT(*) AS order_count
+//             FROM "order"
+//             WHERE request_date NOTNULL
+//             GROUP BY date
+//         )
+//             SELECT TO_CHAR(r.date, 'YYYY-MM-DD') AS date, CAST(request_count AS INT), CAST(order_count AS INT)
+//             FROM daily_request_counts r LEFT JOIN daily_order_counts o
+//             ON r.date = o.date
+//             ORDER BY r.date`
 
-    const result = await pool.query(query, [limit]);
+//     const result = await pool.query(query, [limit]);
+//     return result.rows;
+// }
+
+const getDailyItemCounts = async (days) => {
+    const query = `
+    WITH daily_order_counts AS (
+        SELECT
+            request_date::DATE AS date, COUNT(*) AS order_count
+        FROM
+            "order"
+        WHERE 
+        request_date NOTNULL
+        GROUP BY 
+            date
+        ORDER BY
+            date DESC 
+    ), recent_order_counts AS (
+        SELECT 
+            *
+        FROM 
+            daily_order_counts
+        WHERE 
+            date <= CURRENT_DATE
+            AND DATE >= CURRENT_date - INTERVAL '${days - 1} days'
+    ), daily_request_counts AS (
+        SELECT
+            accept_date::DATE AS date, COUNT(*) AS request_count
+        FROM
+        request
+        WHERE 
+            accept_date NOTNULL 
+        GROUP BY 
+            date
+    ), recent_request_counts AS (
+        SELECT 
+            *
+        FROM 
+            daily_request_counts
+        WHERE 
+            date <= CURRENT_DATE
+            AND DATE >= CURRENT_DATE - INTERVAL '${days - 1} days'
+    ), date_series AS (
+        SELECT generate_series(
+            CURRENT_DATE - INTERVAL '${days - 1} days', 
+            CURRENT_DATE, 
+            '1 day'::interval
+        ) AS date
+    )
+    SELECT
+        TO_CHAR(d.date, 'YYYY-MM-DD') AS date,
+        COALESCE(order_count, 0)::INT AS order_count,
+        COALESCE(request_count, 0)::INT AS request_count
+    FROM 
+        date_series d LEFT JOIN recent_order_counts o
+            ON d.date = o.date
+        LEFT JOIN recent_request_counts r
+            ON d.date = r.date`;
+
+    const result = await pool.query(query);
     return result.rows;
 }
 
