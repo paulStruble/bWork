@@ -46,7 +46,7 @@ type RequestLineChartProps = {
 
 const RequestLineChart: React.FC<RequestLineChartProps> = ({ chartData }) => {
   return (
-    <Card>
+    <Card className="m-1">
       {/* <CardHeader className="flex justify-center">
         <CardTitle className="text-center">Daily Counts</CardTitle>
       </CardHeader> */}

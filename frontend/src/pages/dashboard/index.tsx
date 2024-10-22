@@ -14,6 +14,8 @@ import { BuildingRequestCount } from "./widgets/map/requestMap";
 import RecentCounter from "./widgets/recentCounter";
 import RequestMapContainer, { BuildingRequestCountMap } from "./widgets/map/requestMapContainer";
 import MapContainer from "./widgets/map/requestMapContainer";
+import ModeToggle from "@/components/ui/mode-toggle";
+import { useTheme } from "next-themes";
 
 
 const apiEntry = process.env.NEXT_PUBLIC_API_ENTRYPOINT;
@@ -95,20 +97,23 @@ export default function Dashboard({
   recentRequestCount,
   recentOrderCount,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { setTheme } = useTheme();
+
   return (
-    <main className="flex flex-row bg-red-500 h-screen w-screen">
-      <div className="flex flex-col justify-between bg-blue-500 h-full">
+    <main className="flex flex-row h-screen w-full p-3 box-border">
+      <ModeToggle/>
+      <div className="flex flex-col justify-between max-h-full overflow-clip">
         <div className="p-0">
           <RecentCounter
             requestCount={recentRequestCount}
             orderCount={recentOrderCount}
           />
         </div>
-        <div className="bg-purple-400">
+        <div className="">
           <HotBuildingsTable tableData={hotBuildingsData}/>
         </div>
       </div>
-      <div className="flex flex-col bg-green-500 h-full flex-grow">
+      <div className="flex flex-col h-full flex-grow">
         <div className="block w-full">
           <RequestLineChart
           chartData={itemLineChartData}

@@ -53,7 +53,7 @@ const HotBuildingsTable = ( { tableData }: HotBuildingsTableProps ) => {
   })
 
   return (
-    <Card>
+    <Card className="m-1">
       <CardHeader className="flex justify-center">
         <CardTitle className="text-center">Building Counts</CardTitle>
       </CardHeader>
