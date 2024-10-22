@@ -12,7 +12,7 @@ import {
 import HotBuildingsTable, { HotBuildingCount } from "./widgets/hotBuildings";
 import { BuildingRequestCount } from "./widgets/map/requestMap";
 import RecentCounter from "./widgets/recentCounter";
-import RequestMapContainer from "./widgets/map/requestMapContainer";
+import RequestMapContainer, { BuildingRequestCountMap } from "./widgets/map/requestMapContainer";
 import MapContainer from "./widgets/map/requestMapContainer";
 
 
@@ -62,12 +62,17 @@ export const getStaticProps = (async () => {
   ]);
 
   const hotBuildingsData = formatHotBuildingsData(hotBuildingsDataPre);
+  const buildingRequestCountsMap = buildingRequestCounts.reduce((map, obj) => {
+      map[obj.building] = obj.count;
+      return map;
+  }, {});
 
   return { props: { 
     requestBarChartData, 
     itemLineChartData, 
     hotBuildingsData, 
     buildingRequestCounts,
+    buildingRequestCountsMap,
     recentRequestCount,
     recentOrderCount
   } };
@@ -76,6 +81,7 @@ export const getStaticProps = (async () => {
   itemLineChartData: DailyItemCount[],
   hotBuildingsData: HotBuildingCount[],
   buildingRequestCounts: BuildingRequestCount[],
+  buildingRequestCountsMap: BuildingRequestCountMap,
   recentRequestCount: number,
   recentOrderCount: number,
 }>
@@ -85,6 +91,7 @@ export default function Dashboard({
   itemLineChartData,
   hotBuildingsData,
   buildingRequestCounts,
+  buildingRequestCountsMap,
   recentRequestCount,
   recentOrderCount,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -107,8 +114,8 @@ export default function Dashboard({
           chartData={itemLineChartData}
           />
         </div>
-        <div className="bg-yellow-400 flex-grow">
-          <RequestMapContainer buildingRequestCounts={buildingRequestCounts}/>
+        <div className="flex-grow">
+          <RequestMapContainer buildingRequestCountsMap={buildingRequestCountsMap}/>
         </div>
       </div>
     </main>

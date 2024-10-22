@@ -169,6 +169,16 @@ const getHotBuildingCounts = async (limit, days) => {
 
 const getBuildingRequestCounts = async (days) => {
     const query = `
+    WITH all_buildings AS (
+        SELECT
+            DISTINCT building
+        FROM
+            request
+        WHERE 
+            building NOTNULL 
+        GROUP BY 
+            building
+    ), recent_building_counts AS (
     SELECT
         building,
         CAST(COUNT(*) AS INT) AS count
@@ -181,8 +191,15 @@ const getBuildingRequestCounts = async (days) => {
         AND accept_date >= CURRENT_DATE - INTERVAL '${days - 1} days'
     GROUP BY 
         building
-    ORDER BY
-        building`;
+    )
+    SELECT
+        a.building,
+        COALESCE(count, 0) AS count
+    FROM 
+        all_buildings a LEFT JOIN recent_building_counts r
+        ON a.building = r.building
+    ORDER BY 
+        a.building`;
 
     const result = await pool.query(query);
     return result.rows;
