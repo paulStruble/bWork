@@ -16,6 +16,10 @@ import RequestMapContainer, { BuildingRequestCountMap } from "./widgets/map/requ
 import MapContainer from "./widgets/map/requestMapContainer";
 import ModeToggle from "@/components/ui/mode-toggle";
 import { useTheme } from "next-themes";
+import ActiveMap from "./widgets/map/activeMap";
+import { Sidebar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ActiveMapProvider } from "@/context/ActiveMapContext";
 
 
 const apiEntry = process.env.NEXT_PUBLIC_API_ENTRYPOINT;
@@ -100,27 +104,77 @@ export default function Dashboard({
   const { setTheme } = useTheme();
 
   return (
-    <main className="flex flex-row h-screen w-full p-3 box-border">
+    // <main className="flex flex-row h-screen w-full p-3 box-border">
+    //     <ModeToggle/>
+    //   <div className="flex flex-col justify-between max-h-full overflow-clip">
+    //     <div className="p-0">
+    //       <RecentCounter
+    //         requestCount={recentRequestCount}
+    //         orderCount={recentOrderCount}
+    //       />
+    //     </div>
+    //     <div className="">
+    //       <HotBuildingsTable tableData={hotBuildingsData}/>
+    //     </div>
+    //   </div>
+    //   <div className="flex flex-col h-full flex-grow">
+    //     <div className="block w-full">
+    //       <RequestLineChart
+    //       chartData={itemLineChartData}
+    //       />
+    //     </div>
+    //     <div className="flex-grow">
+    //       <RequestMapContainer buildingRequestCountsMap={buildingRequestCountsMap}/>
+    //     </div>
+    //   </div>
+    //   <div className="flex flex-col">
+    //     <ActiveMap/>
+    //     <HotBuildingsTable tableData={hotBuildingsData}/>
+    //   </div>
+    // </main>
+    <main className="flex flex-row h-screen w-screen">
       <ModeToggle/>
-      <div className="flex flex-col justify-between max-h-full overflow-clip">
-        <div className="p-0">
+      {/* left content */}
+      <div className="flex flex-col w-[15%] h-full">
+        {/* top left corner */}
+        <div className="flex h-[25%]">
           <RecentCounter
             requestCount={recentRequestCount}
             orderCount={recentOrderCount}
           />
         </div>
-        <div className="">
-          <HotBuildingsTable tableData={hotBuildingsData}/>
-        </div>
-      </div>
-      <div className="flex flex-col h-full flex-grow">
-        <div className="block w-full">
-          <RequestLineChart
-          chartData={itemLineChartData}
+        {/* left bar */}
+        <div className="flex h-[75%]">
+          <HotBuildingsTable
+            tableData={hotBuildingsData}
           />
         </div>
-        <div className="flex-grow">
-          <RequestMapContainer buildingRequestCountsMap={buildingRequestCountsMap}/>
+      </div>
+      {/* center content */}
+      <div className="flex flex-col w-[80%] h-full">
+        {/* top center bar */}
+        <div className="flex h-[25%]">
+          <RequestLineChart
+            chartData={itemLineChartData}
+          />
+        </div>
+        {/* bottom center content */}
+        <div className="flex h-[75%]">
+          <MapContainer buildingRequestCountsMap={buildingRequestCountsMap}/>
+        </div>
+      </div>
+      {/* right content */}
+      <div className="flex flex-col w-[15%] h-full">
+        {/* top right corner */}
+        <div className="flex h-[25%]">
+          <ActiveMap/>
+        </div>
+        {/* right bar */}
+        <div className="flex h-[75%]">
+          <Card className="m-1 w-full">
+            <CardContent className="">
+            </CardContent>
+          </Card>
         </div>
       </div>
     </main>

@@ -10,24 +10,19 @@ type RecentCounterProps = {
 
 const RecentCounter = ( { requestCount, orderCount }: RecentCounterProps ) => {
   return (
-    <>
-      <Card className="p-5 m-1">
-        <CardContent className="w-full text-center p-3">
-          <div className="text-6xl font-bold">{requestCount}</div>
-          <div className="text-xl font-medium">Requests</div>
-          {/* <div className="text-sm text-gray-400">in the past 90 days</div> */}
-        </CardContent>
-        <Separator/>
-        <CardContent className="w-full text-center p-3">
-          <div className="text-6xl font-bold">{orderCount}</div>
-          <div className="text-xl font-medium">Orders</div>
-          {/* <div className="text-sm text-gray-400">in the past 90 days</div> */}
-        </CardContent>
-        <CardFooter className="p-0">
-          <div className="p-0 m-auto text-xs text-gray-500">in the last 90 days</div>
-        </CardFooter>
-      </Card>
-    </>
+    <Card className="p-1 m-1 w-full flex flex-col justify-evenly">
+      <CardContent className="w-full text-center p-2">
+        <div className="text-6xl font-semibold">{requestCount}</div>
+        <div className="text-xl font-light text-muted-foreground">Requests</div>
+        {/* <div className="text-sm text-gray-400">in the past 90 days</div> */}
+      </CardContent>
+      <Separator className=""/>
+      <CardContent className="w-full text-center p-2">
+        <div className="text-6xl font-semibold">{orderCount}</div>
+        <div className="text-xl font-light text-muted-foreground">Orders</div>
+        {/* <div className="text-sm text-gray-400">in the past 90 days</div> */}
+      </CardContent>
+    </Card>
   )
 }
 

@@ -290,24 +290,50 @@ const MapContainer = ({ buildingRequestCountsMap }: MapContainerProps ) => {
   const buildingColors: BuildingColors = calcBuildingColors(buildingRequestCountsMap);
 
   return (
-    <div className="flex flex-row flex-nowrap h-full w-full">
-      <div className="flex flex-wrap flex-row h-full justify-around">
+    // <div className="flex flex-row flex-nowrap h-full max-w-full overflow-clip">
+    //   <div className="flex flex-wrap flex-row h-full justify-around">
+    //     <Unit1 buildingColors={buildingColors}/>
+    //     <Unit2 buildingColors={buildingColors}/>
+    //     <Unit3 buildingColors={buildingColors}/>
+    //   </div>
+    //   <div className="flex flex-wrap flex-row flex-grow h-full justify-around">
+    //     <Blackwell buildingColors={buildingColors}/>
+    //     <AnchorHouse buildingColors={buildingColors}/>
+    //     <BeverlyCleary buildingColors={buildingColors}/>
+    //     <Bowles buildingColors={buildingColors}/>
+    //     <ChanningBowditch buildingColors={buildingColors}/>
+    //     <Crossroads buildingColors={buildingColors}/>
+    //     <MartinezCommons buildingColors={buildingColors}/>
+    //   </div>
+    //   <div className="flex flex-row">
+    //     <FoothillStern buildingColors={buildingColors}/>
+    //     <ClarkKerr buildingColors={buildingColors}/>
+    //   </div>
+    // </div>
+    <div className="flex flex-row w-full overflow-clip">
+      {/* Left - Units */}
+      <div className="flex flex-col">
         <Unit1 buildingColors={buildingColors}/>
         <Unit2 buildingColors={buildingColors}/>
         <Unit3 buildingColors={buildingColors}/>
       </div>
-      <div className="flex flex-wrap flex-row flex-grow h-full justify-around">
-        <Blackwell buildingColors={buildingColors}/>
-        <AnchorHouse buildingColors={buildingColors}/>
-        <BeverlyCleary buildingColors={buildingColors}/>
-        <Bowles buildingColors={buildingColors}/>
-        <ChanningBowditch buildingColors={buildingColors}/>
-        <Crossroads buildingColors={buildingColors}/>
-        <MartinezCommons buildingColors={buildingColors}/>
-      </div>
-      <div className="flex fles-row">
-        <FoothillStern buildingColors={buildingColors}/>
-        <ClarkKerr buildingColors={buildingColors}/>
+      {/* Right - CK, FH, Others */}
+      <div className="flex flex-col w-full">
+        {/* Top Right - CK, FH */}
+        <div className="flex flex-row justify-around">
+          <FoothillStern buildingColors={buildingColors}/>
+          <ClarkKerr buildingColors={buildingColors}/>
+        </div>
+        {/* Bottom Right - Others */}
+        <div className="flex flex=row justify-around">
+          <Blackwell buildingColors={buildingColors}/>
+          <AnchorHouse buildingColors={buildingColors}/>
+          <BeverlyCleary buildingColors={buildingColors}/>
+          <Bowles buildingColors={buildingColors}/>
+          <ChanningBowditch buildingColors={buildingColors}/>
+          <Crossroads buildingColors={buildingColors}/>
+          <MartinezCommons buildingColors={buildingColors}/>
+        </div>
       </div>
     </div>
   );

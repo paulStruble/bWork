@@ -53,7 +53,7 @@ const HotBuildingsTable = ( { tableData }: HotBuildingsTableProps ) => {
   })
 
   return (
-    <Card className="m-1">
+    <Card className="m-1 w-full">
       <CardHeader className="flex justify-center">
         <CardTitle className="text-center">Building Counts</CardTitle>
       </CardHeader>
@@ -103,12 +103,6 @@ const HotBuildingsTable = ( { tableData }: HotBuildingsTableProps ) => {
           </Table>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-center items-center flex-col gap-2 text-xs">
-        <div className="leading-none text-muted-foreground italic text-center">
-          Counts are sum over the past 90 days.<br/>
-          Priorities are a mean over the past 90 days.
-        </div>
-      </CardFooter>
     </Card>
   )
 }

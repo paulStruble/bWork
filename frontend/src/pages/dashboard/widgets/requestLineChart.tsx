@@ -46,12 +46,12 @@ type RequestLineChartProps = {
 
 const RequestLineChart: React.FC<RequestLineChartProps> = ({ chartData }) => {
   return (
-    <Card className="m-1">
+    <Card className="m-1 flex w-full box-border">
       {/* <CardHeader className="flex justify-center">
         <CardTitle className="text-center">Daily Counts</CardTitle>
       </CardHeader> */}
-      <CardContent className="w-full">
-        <ChartContainer config={chartConfig} className="w-full h-64">
+      <CardContent className="flex w-full box-border">
+        <ChartContainer config={chartConfig} className="flex w-full box-border">
           <LineChart
             accessibilityLayer
             data={chartData}
@@ -67,6 +67,8 @@ const RequestLineChart: React.FC<RequestLineChartProps> = ({ chartData }) => {
               axisLine={false}
               tickMargin={8}
               tickFormatter={formatDate}
+              interval="preserveEnd"
+              angle={-45}
             />
             <ChartTooltip
               cursor={false}
