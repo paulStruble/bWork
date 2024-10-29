@@ -12,7 +12,7 @@ const ModeToggle = () => {
         variant="outline"
         size="icon"
         onClick={() => theme === "dark" ? setTheme("light") : setTheme("dark")}
-        className="absolute m-5 rounded-lg top-0 z-10 right-0 outline-none border-none shadow-none"
+        className="absolute m-5 rounded-lg top-0 z-10 left-0 outline-none border-none shadow-none"
         >
         <LightModeIcon 
           className="absolute h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" 
