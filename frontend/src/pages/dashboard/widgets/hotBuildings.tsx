@@ -18,6 +18,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { Cell } from "recharts";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 export type HotBuildingCount = {
@@ -53,56 +54,54 @@ const HotBuildingsTable = ( { tableData }: HotBuildingsTableProps ) => {
   })
 
   return (
-    <Card className="m-1 w-full">
+    <Card className="flex flex-col m-1 w-full">
       <CardHeader className="flex justify-center">
         <CardTitle className="text-center">Building Counts</CardTitle>
       </CardHeader>
-      <CardContent className="w-full">
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    )
-                  })}
+      <ScrollArea className="flex rounded-md border m-6 mt-0">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={hotBuildingColumns.length} className="h-24 text-center">
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={hotBuildingColumns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </ScrollArea>
     </Card>
   )
 }

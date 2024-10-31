@@ -37,8 +37,8 @@ router.get('/dailyItemCounts', async (req, res) => {
 
 router.get('/hotBuildingCounts', async (req, res) => {
     try {
-        const limit = 10;
-        const days = 90
+        const limit = 100;
+        const days = 90;
         const hotBuildingCounts = await db.getHotBuildingCounts(limit, days);
         res.json(hotBuildingCounts);
     } catch (err) {

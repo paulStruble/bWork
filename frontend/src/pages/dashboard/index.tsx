@@ -140,7 +140,7 @@ export default function Dashboard({
     //     <HotBuildingsTable tableData={hotBuildingsData}/>
     //   </div>
     // </main>
-    <main className="flex flex-row h-screen w-screen box-border overflow-clip">
+    <main className="flex flex-row h-screen w-screen overflow-clip">
       <ModeToggle/>
       {/* left content */}
       <div className="flex flex-col w-[15%] h-full">
