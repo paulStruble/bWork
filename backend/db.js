@@ -244,6 +244,38 @@ const getRecentOrderCount = async (days) => {
     return recentOrderCount;
 }
 
+const getRecentBuildingRequests = async (building, days) => {
+    const query = `
+    WITH norton_requests AS (
+        SELECT
+            building,	
+            id,
+            room,
+            status,
+            COALESCE(accept_date, reject_date) AS date,
+            CASE WHEN status = 'Pending' THEN 1 ELSE 0 END AS pending
+        FROM 
+            request
+        WHERE 
+            building = '${building}'
+    )
+    SELECT
+        id,
+        room,
+        status
+    FROM
+        norton_requests
+    WHERE
+        pending = 1
+        OR (date >= CURRENT_DATE - INTERVAL '${days - 1} days' AND date <= CURRENT_DATE)
+    ORDER BY 
+        pending DESC,
+        id DESC`;
+
+    const result = await pool.query(query);
+    return result.rows;
+}
+
 module.exports = {
     getMonthlyRequestCounts,
     getDailyRequestCounts,
@@ -251,5 +283,6 @@ module.exports = {
     getHotBuildingCounts,
     getBuildingRequestCounts,
     getRecentRequestCount,
-    getRecentOrderCount
+    getRecentOrderCount,
+    getRecentBuildingRequests,
 };

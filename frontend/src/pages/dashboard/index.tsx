@@ -20,6 +20,7 @@ import ActiveMap from "./widgets/map/activeMap";
 import { Sidebar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ActiveMapProvider } from "@/context/ActiveMapContext";
+import RecentRequestsTable, { RecentRequest } from "./widgets/recentRequests";
 
 
 const apiEntry = process.env.NEXT_PUBLIC_API_ENTRYPOINT;
@@ -41,7 +42,8 @@ export const getStaticProps = (async () => {
     reqHotBuildingsDataPre,
     reqBuildingRequestCounts,
     reqRecentRequestCount,
-    reqRecentOrderCount
+    reqRecentOrderCount,
+    reqRecentBuildingRequests
     ] = await Promise.all([
     fetch(`${apiEntry}/requestChart`),
     fetch(`${apiEntry}/dailyItemCounts`),
@@ -49,6 +51,7 @@ export const getStaticProps = (async () => {
     fetch(`${apiEntry}/buildingRequestCounts`),
     fetch(`${apiEntry}/recentRequestCount`),
     fetch(`${apiEntry}/recentOrderCount`),
+    fetch(`${apiEntry}/recentBuildingRequests`),
   ]);
 
   const [
@@ -57,7 +60,8 @@ export const getStaticProps = (async () => {
     hotBuildingsDataPre, 
     buildingRequestCounts,
     recentRequestCount,
-    recentOrderCount
+    recentOrderCount,
+    recentBuildingRequests
   ] = await Promise.all([
     reqRequestBarChartData.json(),
     reqItemLineChartData.json(),
@@ -65,6 +69,7 @@ export const getStaticProps = (async () => {
     reqBuildingRequestCounts.json(),
     reqRecentRequestCount.json(),
     reqRecentOrderCount.json(),
+    reqRecentBuildingRequests.json(),
   ]);
 
   const hotBuildingsData = formatHotBuildingsData(hotBuildingsDataPre);
@@ -80,7 +85,8 @@ export const getStaticProps = (async () => {
     buildingRequestCounts,
     buildingRequestCountsMap,
     recentRequestCount,
-    recentOrderCount
+    recentOrderCount,
+    recentBuildingRequests
   } };
 }) satisfies GetStaticProps<{
   requestBarChartData: MonthlyRequestsCount[],
@@ -90,6 +96,7 @@ export const getStaticProps = (async () => {
   buildingRequestCountsMap: BuildingRequestCountMap,
   recentRequestCount: number,
   recentOrderCount: number,
+  recentBuildingRequests: RecentRequest[],
 }>
 
 export default function Dashboard({ 
@@ -100,6 +107,7 @@ export default function Dashboard({
   buildingRequestCountsMap,
   recentRequestCount,
   recentOrderCount,
+  recentBuildingRequests,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { setTheme } = useTheme();
 
@@ -132,7 +140,7 @@ export default function Dashboard({
     //     <HotBuildingsTable tableData={hotBuildingsData}/>
     //   </div>
     // </main>
-    <main className="flex flex-row h-screen w-screen">
+    <main className="flex flex-row h-screen w-screen box-border overflow-clip">
       <ModeToggle/>
       {/* left content */}
       <div className="flex flex-col w-[15%] h-full">
@@ -171,10 +179,7 @@ export default function Dashboard({
         </div>
         {/* right bar */}
         <div className="flex h-[75%]">
-          <Card className="m-1 w-full">
-            <CardContent className="">
-            </CardContent>
-          </Card>
+          <RecentRequestsTable tableData={recentBuildingRequests}/>
         </div>
       </div>
     </main>

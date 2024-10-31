@@ -80,4 +80,16 @@ router.get('/recentOrderCount', async (req, res) => {
     }
 });
 
+router.get('/recentBuildingRequests', async (req, res) => {
+    try {
+        const building = 'Norton Hall';
+        const days = 90;
+        const recentRequests = await db.getRecentBuildingRequests(building, days);
+        res.json(recentRequests);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send(`Server Error: failed to fetch recent requests for <${building}>`);
+    }
+});
+
 module.exports = router;
