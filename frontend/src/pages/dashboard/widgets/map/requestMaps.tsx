@@ -356,8 +356,8 @@ export const Unit3 = ({ buildingColors }: MapWidgetProps) => {
 }
 export const Blackwell = ({ buildingColors }: MapWidgetProps) => {
   return (
-    <Card className="m-1 h-[128px] w-[128px]">
-      <CardTitle className="text-xl text-center">
+    <Card className="m-1 p-2 h-[128px] w-[128px]">
+      <CardTitle className="text-center">
         Blackwell
       </CardTitle>
       <CardContent>
@@ -544,7 +544,7 @@ export const FoothillStern = ({ buildingColors }: MapWidgetProps) => {
 export const AnchorHouse = ({ buildingColors }: MapWidgetProps) => {
   return (
     <Card className="m-1 p-2 h-[128px] w-[128px]">
-      <CardTitle className="text-xl text-center">
+      <CardTitle className="text-center">
         Anchor House
       </CardTitle>
       <CardContent>
@@ -561,7 +561,7 @@ export const AnchorHouse = ({ buildingColors }: MapWidgetProps) => {
 export const BeverlyCleary = ({ buildingColors }: MapWidgetProps) => {
   return (
     <Card className="m-1 p-2 h-[128px] w-[128px]">
-      <CardTitle className="text-xl text-center">
+      <CardTitle className="text-center">
         Beverly Cleary
       </CardTitle>
       <CardContent>
@@ -578,7 +578,7 @@ export const BeverlyCleary = ({ buildingColors }: MapWidgetProps) => {
 export const Bowles = ({ buildingColors }: MapWidgetProps) => {
   return (
     <Card className="m-1 p-2 h-[128px] w-[128px]">
-      <CardTitle className="text-xl text-center">
+      <CardTitle className="text-center">
         Bowles
       </CardTitle>
       <CardContent>
@@ -595,7 +595,7 @@ export const Bowles = ({ buildingColors }: MapWidgetProps) => {
 export const ChanningBowditch = ({ buildingColors }: MapWidgetProps) => {
   return (
     <Card className="m-1 p-2 h-[128px] w-[128px]">
-      <CardTitle className="text-xl text-center">
+      <CardTitle className="text-center">
         Channing Bowditch
       </CardTitle>
       <CardContent>
@@ -612,7 +612,7 @@ export const ChanningBowditch = ({ buildingColors }: MapWidgetProps) => {
 export const Crossroads = ({ buildingColors }: MapWidgetProps) => {
   return (
     <Card className="m-1 p-2 h-[128px] w-[128px]">
-      <CardTitle className="text-xl text-center">
+      <CardTitle className="text-center">
         Crossroads
       </CardTitle>
       <CardContent>
@@ -629,7 +629,7 @@ export const Crossroads = ({ buildingColors }: MapWidgetProps) => {
 export const MartinezCommons = ({ buildingColors }: MapWidgetProps) => {
   return (
     <Card className="m-1 p-2 h-[128px] w-[128px]">
-      <CardTitle className="text-xl text-center">
+      <CardTitle className="text-center">
         Martinez Commons
       </CardTitle>
       <CardContent>
