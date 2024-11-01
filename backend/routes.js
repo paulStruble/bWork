@@ -81,6 +81,18 @@ router.get('/recentRequestCount', async (req, res) => {
     }
 });
 
+router.get('/buildingRecentRequestCount', async (req, res) => {
+    try {
+        const building = 'Norton Hall';
+        const days = 90;
+        const buildingRecentRequestCount = await db.getBuildingRecentRequestCount(building, days);
+        res.json(buildingRecentRequestCount);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send(`Server Error: failed to fetch recent request count for <${building}>`);
+    }
+});
+
 router.get('/recentOrderCount', async (req, res) => {
     try {
         const days = 90;
@@ -89,6 +101,18 @@ router.get('/recentOrderCount', async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error: failed to fetch recent order count');
+    }
+});
+
+router.get('/buildingRecentOrderCount', async (req, res) => {
+    try {
+        const building = 'Norton Hall';
+        const days = 90;
+        const buildingRecentOrderCount = await db.getBuildingRecentOrderCount(building, days);
+        res.json(buildingRecentOrderCount);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send(`Server Error: failed to fetch recent order count for <${building}>`);
     }
 });
 

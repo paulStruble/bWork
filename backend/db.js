@@ -190,7 +190,6 @@ const getBuildingDailyItemCounts = async (building, days) => {
     return result.rows;
 }
 
-
 const getHotBuildingCounts = async (limit, days) => {
     const query = `
     WITH building_dates AS (
@@ -261,14 +260,46 @@ const getBuildingRequestCounts = async (days) => {
 
 const getRecentRequestCount = async (days) => {
     const query = `
-    SELECT
+    WITH request_dates AS (
+        SELECT 
+            COALESCE(accept_date, reject_date) AS date
+        FROM 
+            request
+        WHERE 
+            status != 'Pending'
+    )
+    SELECT 
         COUNT(*) AS recent_request_count
     FROM 
-        request
+        request_dates
     WHERE 
-        accept_date NOTNULL 
-        AND accept_date <= CURRENT_DATE
-        AND accept_Date >= CURRENT_DATE - INTERVAL '${days - 1} days'`;
+        date >= CURRENT_DATE - INTERVAL '${days - 1} days'
+        AND date <= CURRENT_DATE`;
+
+    const result = await pool.query(query);
+    console.log(result)
+    const recentRequestCount = parseInt(result.rows[0].recent_request_count);
+    return recentRequestCount;
+}
+
+const getBuildingRecentRequestCount = async (building, days) => {
+    const query = `
+    WITH request_dates AS (
+        SELECT 
+            COALESCE(accept_date, reject_date) AS date
+        FROM 
+            request
+        WHERE 
+            status != 'Pending'
+            AND building = '${building}'
+    )
+    SELECT 
+        COUNT(*) AS recent_request_count
+    FROM 
+        request_dates
+    WHERE 
+        date >= CURRENT_DATE - INTERVAL '${days - 1} days'
+        AND date <= CURRENT_DATE`;
 
     const result = await pool.query(query);
     const recentRequestCount = parseInt(result.rows[0].recent_request_count);
@@ -277,21 +308,31 @@ const getRecentRequestCount = async (days) => {
 
 const getRecentOrderCount = async (days) => {
     const query = `
-    WITH order_dates AS (
-        SELECT 
-            request_date::DATE AS date
-        FROM 
-            "order"
-        WHERE 
-            request_date NOTNULL
-    )
-    SELECT
-        COUNT(*) AS recent_order_count
-    FROM
-        order_dates
+    SELECT 
+        COUNT(*) AS recent_order_count 
+    FROM 
+        "order"
     WHERE 
-        date <= CURRENT_DATE
-        AND date >= CURRENT_DATE - INTERVAL '${days - 1} days'`;
+            request_date NOTNULL
+        AND request_date::DATE <= CURRENT_DATE
+        AND request_date::DATE >= CURRENT_DATE - INTERVAL '${days - 1} days'`;
+
+    const result = await pool.query(query);
+    const recentOrderCount = parseInt(result.rows[0].recent_order_count);
+    return recentOrderCount;
+}
+
+const getBuildingRecentOrderCount = async (building, days) => {
+    const query = `
+    SELECT 
+        COUNT(*) AS recent_order_count 
+    FROM 
+        "order"
+    WHERE 
+        building = 'Norton Hall'
+        AND request_date NOTNULL
+        AND request_date::DATE <= CURRENT_DATE
+        AND request_date::DATE >= CURRENT_DATE - INTERVAL '${days - 1} days'`;
 
     const result = await pool.query(query);
     const recentOrderCount = parseInt(result.rows[0].recent_order_count);
@@ -338,6 +379,8 @@ module.exports = {
     getHotBuildingCounts,
     getBuildingRequestCounts,
     getRecentRequestCount,
+    getBuildingRecentRequestCount,
     getRecentOrderCount,
+    getBuildingRecentOrderCount,
     getRecentBuildingRequests,
 };
