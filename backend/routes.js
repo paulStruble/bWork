@@ -35,6 +35,18 @@ router.get('/dailyItemCounts', async (req, res) => {
     }
 });
 
+router.get('/buildingDailyItemCounts', async (req, res) => {
+    try {
+        const building = 'Norton Hall';
+        const days = 90;
+        const buildingDailyItemCounts = await db.getBuildingDailyItemCounts(building, days);
+        res.json(buildingDailyItemCounts);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send(`Server Error: failed to fetch daily building item counts for <${building}>`);
+    }
+});
+
 router.get('/hotBuildingCounts', async (req, res) => {
     try {
         const limit = 100;

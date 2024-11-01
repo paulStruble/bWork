@@ -80,62 +80,116 @@ const getDailyRequestCounts = async (limit) => {
 
 const getDailyItemCounts = async (days) => {
     const query = `
-    WITH daily_order_counts AS (
-        SELECT
-            request_date::DATE AS date, COUNT(*) AS order_count
-        FROM
-            "order"
-        WHERE 
-        request_date NOTNULL
-        GROUP BY 
-            date
-        ORDER BY
-            date DESC 
-    ), recent_order_counts AS (
+    WITH request_dates AS (
         SELECT 
-            *
+            COALESCE(accept_date, reject_date)::DATE AS date
         FROM 
-            daily_order_counts
+            request
         WHERE 
-            date <= CURRENT_DATE
-            AND DATE >= CURRENT_date - INTERVAL '${days - 1} days'
+            status != 'Pending'
     ), daily_request_counts AS (
         SELECT
-            accept_date::DATE AS date, COUNT(*) AS request_count
+            date,
+            COUNT(*) AS request_count
         FROM
-        request
-        WHERE 
-            accept_date NOTNULL 
+            request_dates
         GROUP BY 
             date
-    ), recent_request_counts AS (
+        HAVING
+            date >= CURRENT_DATE - INTERVAL '${days - 1} days'
+            AND date <= CURRENT_DATE
+    ), daily_order_counts AS (
         SELECT 
-            *
+            request_date::DATE AS date,
+            COUNT(*) AS order_count
         FROM 
-            daily_request_counts
-        WHERE 
-            date <= CURRENT_DATE
-            AND DATE >= CURRENT_DATE - INTERVAL '${days - 1} days'
+            "order"
+        GROUP BY 
+            request_date
+        HAVING 
+            request_date::DATE >= CURRENT_DATE - INTERVAL '${days - 1} days'
+            AND request_date::DATE <= CURRENT_DATE
     ), date_series AS (
-        SELECT generate_series(
+        SELECT GENERATE_SERIES(
             CURRENT_DATE - INTERVAL '${days - 1} days', 
             CURRENT_DATE, 
-            '1 day'::interval
+            '1 day'::INTERVAL
         ) AS date
     )
     SELECT
         TO_CHAR(d.date, 'YYYY-MM-DD') AS date,
-        COALESCE(order_count, 0)::INT AS order_count,
-        COALESCE(request_count, 0)::INT AS request_count
+        COALESCE(r.request_count, 0)::INT AS request_count,
+        COALESCE(o.order_count, 0)::INT AS order_count
     FROM 
-        date_series d LEFT JOIN recent_order_counts o
+        date_series d LEFT JOIN daily_request_counts r
+            ON d.date = r.date
+        LEFT JOIN daily_order_counts o
             ON d.date = o.date
-        LEFT JOIN recent_request_counts r
-            ON d.date = r.date`;
+    ORDER BY 
+        date`;
 
     const result = await pool.query(query);
     return result.rows;
 }
+
+const getBuildingDailyItemCounts = async (building, days) => {
+    const query = `
+    WITH request_dates AS (
+        SELECT 
+            building,	
+            COALESCE(accept_date, reject_date) AS date
+        FROM 
+            request
+        WHERE 
+            building = '${building}'
+            AND status != 'Pending'
+    ), daily_request_counts AS (
+        SELECT
+            date,
+            COUNT(*) AS request_count 
+        FROM 
+            request_dates
+        GROUP BY
+            date
+        HAVING
+            date >= CURRENT_DATE - INTERVAL '${days - 1} days'
+            AND date <= CURRENT_DATE
+    ), daily_order_counts AS (
+        SELECT 
+            request_date::DATE AS date,
+            COUNT(*) AS order_count
+        FROM 
+            "order"
+        WHERE 
+            building = '${building}'
+        GROUP BY 
+            request_date
+        HAVING 
+            request_date::DATE >= CURRENT_DATE - INTERVAL '${days - 1} days'
+            AND request_date::DATE <= CURRENT_DATE
+    ), date_series AS (
+        SELECT GENERATE_SERIES(
+            CURRENT_DATE - INTERVAL '${days - 1} days', 
+            CURRENT_DATE, 
+            '1 day'::INTERVAL
+        ) AS date
+    )
+    SELECT
+        TO_CHAR(d.date, 'YYYY-MM-DD') AS date,
+        COALESCE(r.request_count, 0)::INT AS request_count,
+        COALESCE(o.order_count, 0)::INT AS order_count
+    FROM 
+        date_series d LEFT JOIN daily_request_counts r
+            ON d.date = r.date
+        LEFT JOIN daily_order_counts o
+            ON d.date = o.date
+    ORDER BY 
+        date`;
+
+    const result = await pool.query(query);
+    return result.rows;
+}
+
 
 const getHotBuildingCounts = async (limit, days) => {
     const query = `
@@ -280,6 +334,7 @@ module.exports = {
     getMonthlyRequestCounts,
     getDailyRequestCounts,
     getDailyItemCounts,
+    getBuildingDailyItemCounts,
     getHotBuildingCounts,
     getBuildingRequestCounts,
     getRecentRequestCount,
